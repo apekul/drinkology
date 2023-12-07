@@ -47,8 +47,16 @@ const Hero = () => {
           </div>
         </div>
         {/* Waves */}
-        <img src={VectorBG} alt="VectorWave2" className="absolute -bottom-1" />
-        <img src={Vector} alt="VectorWave" className="absolute -bottom-1" />
+        <img
+          src={VectorBG}
+          alt="VectorWave2"
+          className="absolute -bottom-1 w-full"
+        />
+        <img
+          src={Vector}
+          alt="VectorWave"
+          className="absolute -bottom-1 w-full"
+        />
       </div>
     </section>
   );
