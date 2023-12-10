@@ -70,31 +70,46 @@ const Search = () => {
           ))}
         </ul>
         {/* Result */}
-        <ul className="border-t-2 flex flex-col gap-5">
-          <p className="font-bold">Results for "Quote"</p>
+        <ul className="border-t-2 flex flex-col gap-3">
+          <p className="font-bold">Results for "{quote}"</p>
           {searchResult.map((item, index) => (
             <li
               key={index}
               className="bg-gray-100 flex gap-3 rounded-md p-2 shadow"
             >
-              <img
-                src={item.strDrinkThumb}
-                alt={item.strDrink}
-                className="w-[200px] h-[200px] rounded-md"
-              />
+              <a href="/" className="w-[30rem] h-[15rem]">
+                <img
+                  src={item.strDrinkThumb}
+                  alt={item.strDrink}
+                  className="w-full h-full rounded-md"
+                />
+              </a>
               {/* title ingredients */}
               <div className="w-2/3">
                 <p className="font-bold text-lg">{item.strDrink}</p>
 
-                <ul>
-                  <li className="flex flex-col text-center bg-red-200 w-[5rem] h-[5rem] ">
-                    <img
-                      src={`https://www.thecocktaildb.com/images/ingredients/${item.strIngredient1}-Medium.png`}
-                      alt={item.strIngredient1}
-                      className="w-full h-full"
-                    />
-                    <p>{item.strIngredient1}</p>
-                  </li>
+                <ul className="flex flex-wrap gap-2">
+                  {/* {console.log(item)} */}
+                  {Object.keys(item).map(
+                    (v, i) =>
+                      v.includes("strIngredient") &&
+                      item[v] !== null && (
+                        <li
+                          key={i}
+                          className="flex flex-col text-center w-[5rem] h-auto "
+                        >
+                          <img
+                            src={`https://www.thecocktaildb.com/images/ingredients/${item[v]}-Medium.png`}
+                            alt={item.strIngredient1}
+                            className=""
+                          />
+                          <span>
+                            <p>{item["strMeasure" + v.replace(/\D/g, "")]}</p>
+                            <p>{item[v]}</p>
+                          </span>
+                        </li>
+                      )
+                  )}
                 </ul>
               </div>
               {/* instruction/tags */}
