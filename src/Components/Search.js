@@ -75,46 +75,56 @@ const Search = () => {
           {searchResult.map((item, index) => (
             <li
               key={index}
-              className="bg-gray-100 flex gap-3 rounded-md p-2 shadow"
+              className={` flex flex-col lg:flex-row gap-3 rounded-md p-3 shadow ${
+                index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"
+              }`}
             >
-              <a href="/" className="w-[30rem] h-[15rem]">
-                <img
-                  src={item.strDrinkThumb}
-                  alt={item.strDrink}
-                  className="w-full h-full rounded-md"
-                />
-              </a>
-              {/* title ingredients */}
-              <div className="w-2/3">
-                <p className="font-bold text-lg">{item.strDrink}</p>
-
-                <ul className="flex flex-wrap gap-2">
-                  {/* {console.log(item)} */}
-                  {Object.keys(item).map(
-                    (v, i) =>
-                      v.includes("strIngredient") &&
-                      item[v] !== null && (
-                        <li
-                          key={i}
-                          className="flex flex-col text-center w-[5rem] h-auto "
-                        >
-                          <img
-                            src={`https://www.thecocktaildb.com/images/ingredients/${item[v]}-Medium.png`}
-                            alt={item.strIngredient1}
-                            className=""
-                          />
-                          <span>
-                            <p>{item["strMeasure" + v.replace(/\D/g, "")]}</p>
-                            <p>{item[v]}</p>
-                          </span>
-                        </li>
-                      )
-                  )}
-                </ul>
-              </div>
-              {/* instruction/tags */}
-              <div className="w-full">
+              <img
+                src={item.strDrinkThumb}
+                alt={item.strDrink}
+                className="w-[20rem] h-[20rem] rounded-md"
+              />
+              <div className="flex flex-col w-full justify-between">
+                <p className="font-bold text-2xl">{item.strDrink}</p>
+                {/* instruction/tags */}
                 <p className="">{item.strInstructions}</p>
+                {/* title ingredients */}
+                <div className="w-full">
+                  <ul className="flex flex-wrap gap-2">
+                    {Object.keys(item).map(
+                      (v, i) =>
+                        v.includes("strIngredient") &&
+                        item[v] !== null && (
+                          <li
+                            key={i}
+                            className="flex flex-col text-center w-[5rem] h-auto "
+                          >
+                            <img
+                              src={`https://www.thecocktaildb.com/images/ingredients/${item[v]}-Medium.png`}
+                              alt={item.strIngredient1}
+                              className=""
+                            />
+                            <span>
+                              <p>{item["strMeasure" + v.replace(/\D/g, "")]}</p>
+                              <p>{item[v]}</p>
+                            </span>
+                          </li>
+                        )
+                    )}
+                  </ul>
+                </div>
+                <span className="flex items-center gap-2">
+                  {console.log(item)}
+                  <p className="bg-blue-200 py-1 px-2 rounded-md">
+                    {item.strAlcoholic}
+                  </p>
+                  <p className="bg-blue-200 py-1 px-2 rounded-md">
+                    {item.strCategory}
+                  </p>
+                  <p className="bg-blue-200 py-1 px-2 rounded-md">
+                    {item.strGlass}
+                  </p>
+                </span>
               </div>
             </li>
           ))}
