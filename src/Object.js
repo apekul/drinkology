@@ -1,3 +1,14 @@
+export const tagColors = [
+  "bg-amber-400",
+  "bg-lime-400",
+  "bg-green-400",
+  "bg-teal-400",
+  "bg-sky-400",
+  "bg-violet-400",
+  "bg-fuchsia-400",
+  "bg-rose-400",
+];
+
 export const drinks = [
   {
     idDrink: "11007",
