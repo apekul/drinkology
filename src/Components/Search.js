@@ -9,7 +9,14 @@ const Search = () => {
   const [searchResult, setSearchResult] = useState([]);
   const [quote, setQuote] = useState("");
 
-  const [filterByTags, setFilterByTags] = useState([]);
+  // const [filterByTags, setFilterByTags] = useState({
+  //   strCategory: [],
+  //   strAlcoholic: [],
+  //   strGlass: [],
+  // });
+  const [category, setCategory] = useState(new Set());
+  const [alcohol, setAlcohol] = useState(new Set());
+  const [glass, setGlass] = useState(new Set());
 
   const fetchData = () => {
     fetch(
@@ -52,7 +59,7 @@ const Search = () => {
   // }, [filterByTags]);
   // let test = Object.entries(filterByTags[0]);
   // console.log(test);
-  console.log(searchResult);
+
   return (
     <section id="search" className="Container min-h-[50rem]">
       <div className="my-10 p-3 bg-white rounded-md shadow-sm flex flex-col gap-3">
@@ -88,16 +95,45 @@ const Search = () => {
                 {searchTags[cat].map((v, i) => (
                   <li
                     key={i}
-                    className={`border-2 py-1 px-3 rounded-full cursor-pointer text-zinc-500 hover:brightness-90 ${
-                      filterByTags.includes(v) && "bg-gray-200"
-                    }`}
-                    onClick={() =>
-                      setFilterByTags((prev) =>
-                        !filterByTags.includes(v)
-                          ? [...prev, v]
-                          : prev.filter((tag) => tag !== v)
-                      )
-                    }
+                    className={`border-2 py-1 px-3 rounded-full cursor-pointer text-zinc-500 hover:brightness-90
+                    ${category.has(v.strCategory) && "bg-gray-200"}
+                    ${alcohol.has(v.strAlcoholic) && "bg-gray-200"}
+                    ${glass.has(v.strGlass) && "bg-gray-200"}
+                    
+                    `}
+                    onClick={() => {
+                      if (cat === "category") {
+                        return category.has(v.strCategory)
+                          ? setCategory((prev) => {
+                              let newSet = new Set(prev);
+                              newSet.delete(v.strCategory);
+                              return newSet;
+                            })
+                          : setCategory((prev) =>
+                              new Set(prev).add(v.strCategory)
+                            );
+                      }
+                      if (cat === "alcohol") {
+                        return alcohol.has(v.strAlcoholic)
+                          ? setAlcohol((prev) => {
+                              let newSet = new Set(prev);
+                              newSet.delete(v.strAlcoholic);
+                              return newSet;
+                            })
+                          : setAlcohol((prev) =>
+                              new Set(prev).add(v.strAlcoholic)
+                            );
+                      }
+                      if (cat === "glass") {
+                        return glass.has(v.strGlass)
+                          ? setGlass((prev) => {
+                              let newSet = new Set(prev);
+                              newSet.delete(v.strGlass);
+                              return newSet;
+                            })
+                          : setGlass((prev) => new Set(prev).add(v.strGlass));
+                      }
+                    }}
                   >
                     {Object.values(v).map((item, i) => item)}
                   </li>
