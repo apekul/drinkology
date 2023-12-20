@@ -7,6 +7,7 @@ export const tagColors = [
   "bg-violet-400",
   "bg-fuchsia-400",
   "bg-rose-400",
+  "bg-green-400",
 ];
 
 export const drinks = [
