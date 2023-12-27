@@ -36,12 +36,12 @@ const DisplayItem = ({ item, bg }) => {
         )}
       </ul>
       <div className="flex flex-col justify-between w-full h-fit lg:h-full col-span-3 rows-start-3 ">
-        <span className="flex flex-col gap-2 h-full">
+        <span className="flex flex-col gap-2">
           <p className="font-bold text-2xl">{item.strDrink}</p>
-          <p className="lg:h-[11rem] overflow-y-auto">{item.strInstructions}</p>
+          <p className=" overflow-y-auto">{item.strInstructions}</p>
         </span>
         {/* tags */}
-        <span className="flex items-end h-full flex-wrap gap-2 pt-2 overflow-y-auto">
+        <span className="flex items-end flex-wrap gap-2 pt-2 overflow-y-auto">
           <p
             className={`py-1 font-bold px-2 rounded-md cursor-pointer ${tagColors[0]} hover:brightness-105`}
           >
