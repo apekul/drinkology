@@ -186,6 +186,11 @@ const Search = () => {
                     setShowTags((prev) => ({ ...prev, [cat]: !prev[cat] }))
                   }
                 />
+                <p className="bg-gray-300 font-bold px-1">
+                  {cat === "category" && category.size > 0 && category.size}
+                  {cat === "alcohol" && alcohol.size > 0 && alcohol.size}
+                  {cat === "glass" && glass.size > 0 && glass.size}
+                </p>
               </span>
               <ul
                 className={`flex gap-2 flex-wrap ${
