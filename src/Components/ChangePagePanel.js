@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
 
-const ChangePagePanel = ({ pages, setPageLimit, quote }) => {
+const ChangePagePanel = ({ pages, setPageLimit, quote, pageNumberLimit }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const pageNumberLimit = 10;
 
   useEffect(() => {
     setPageLimit({
       min: currentPage <= 1 ? 0 : (currentPage - 1) * pageNumberLimit,
       max: currentPage * pageNumberLimit,
     });
-    document
-      .getElementById("categories")
-      .scrollIntoView({ behavior: "smooth" });
+    document.getElementById("searchBar").scrollIntoView({ behavior: "smooth" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 

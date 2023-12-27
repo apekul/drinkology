@@ -11,7 +11,8 @@ const Search = () => {
 
   // Pages
   const [pages, setPages] = useState(() => 1);
-  const [pageLimit, setPageLimit] = useState({ min: 0, max: 10 });
+  const pageNumberLimit = 10;
+  const [pageLimit, setPageLimit] = useState({ min: 0, max: pageNumberLimit });
 
   // Result for display
   const [searchResult, setSearchResult] = useState([]);
@@ -111,7 +112,7 @@ const Search = () => {
 
   useEffect(() => {
     searchResult && searchResult !== null
-      ? setPages(Math.ceil(searchResult.length / 10))
+      ? setPages(Math.ceil(searchResult.length / pageNumberLimit))
       : setPages(1);
   }, [searchResult]);
 
@@ -142,7 +143,10 @@ const Search = () => {
 
   return (
     <section id="search" className="Container min-h-[50rem]">
-      <div className="mt-10 p-3 bg-white rounded-md shadow-sm flex flex-col gap-3">
+      <div
+        className="mt-10 p-3 bg-white rounded-md shadow-sm flex flex-col gap-3"
+        id="searchBar"
+      >
         <div className="relative w-full sm:w-2/3 flex items-center gap-2">
           <IoSearch
             className="absolute top-2.5 left-2.5 text-zinc-500"
@@ -172,26 +176,53 @@ const Search = () => {
         {/* Categories */}
         <ul
           className={`flex gap-3 flex-col flex-wrap border-b-2 pb-5 transition-all`}
-          id="categories"
         >
           {Object.keys(searchTags).map((cat, index) => (
             <li key={index} className="flex flex-col gap-2">
-              <span className="flex items-center gap-2">
-                <p>Filter by: {cat}</p>
-                <MdOutlineArrowDropDown
-                  size={30}
-                  className={`transition-all duration-[400ms] cursor-pointer ${
-                    showTags[cat] && "rotate-180"
-                  }`}
-                  onClick={() =>
-                    setShowTags((prev) => ({ ...prev, [cat]: !prev[cat] }))
-                  }
-                />
-                <p className="bg-gray-300 font-bold px-1">
-                  {cat === "category" && category.size > 0 && category.size}
-                  {cat === "alcohol" && alcohol.size > 0 && alcohol.size}
-                  {cat === "glass" && glass.size > 0 && glass.size}
-                </p>
+              <span className="flex items-center justify-between px-1 gap-2">
+                <span className="flex items-center">
+                  <p>Filter by: {cat}</p>
+                  <MdOutlineArrowDropDown
+                    size={30}
+                    className={`transition-all duration-[400ms] cursor-pointer ${
+                      showTags[cat] && "rotate-180"
+                    }`}
+                    onClick={() =>
+                      setShowTags((prev) => ({ ...prev, [cat]: !prev[cat] }))
+                    }
+                  />
+                  <p className="bg-gray-300 font-bold px-1">
+                    {cat === "category" && category.size > 0 && category.size}
+                    {cat === "alcohol" && alcohol.size > 0 && alcohol.size}
+                    {cat === "glass" && glass.size > 0 && glass.size}
+                  </p>
+                </span>
+
+                {/* clear category button */}
+                {cat === "category" && category.size > 0 && (
+                  <p
+                    className="cursor-pointer bg-gray-200 text-red-300 px-1 rounded-md text-center font-bold hover:text-red-500"
+                    onClick={() => setCategory(new Set())}
+                  >
+                    Clear
+                  </p>
+                )}
+                {cat === "alcohol" && alcohol.size > 0 && (
+                  <p
+                    className="cursor-pointer bg-gray-200 text-red-300 px-1 rounded-md text-center font-bold hover:text-red-500"
+                    onClick={() => setAlcohol(new Set())}
+                  >
+                    Clear
+                  </p>
+                )}
+                {cat === "glass" && glass.size > 0 && (
+                  <p
+                    className="cursor-pointer bg-gray-200 text-red-300 px-1 rounded-md text-center font-bold hover:text-red-500"
+                    onClick={() => setGlass(new Set())}
+                  >
+                    Clear
+                  </p>
+                )}
               </span>
               <ul
                 className={`flex gap-2 flex-wrap ${
@@ -245,6 +276,7 @@ const Search = () => {
         pages={pages}
         setPageLimit={setPageLimit}
         quote={quote}
+        pageNumberLimit={pageNumberLimit}
       />
     </section>
   );
