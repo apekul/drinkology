@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
 
-const ChangePagePanel = ({ pages, setPageLimit }) => {
+const ChangePagePanel = ({ pages, setPageLimit, quote }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageNumberLimit = 10;
 
@@ -11,6 +11,10 @@ const ChangePagePanel = ({ pages, setPageLimit }) => {
       max: currentPage * pageNumberLimit,
     });
   }, [currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [quote]);
 
   return (
     <div className="flex text-xl gap-3 my-5 items-center justify-center w-full select-none">

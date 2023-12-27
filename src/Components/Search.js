@@ -234,7 +234,11 @@ const Search = () => {
       </div>
 
       {/* pages panel */}
-      <ChangePagePanel pages={pages} setPageLimit={setPageLimit} />
+      <ChangePagePanel
+        pages={pages}
+        setPageLimit={setPageLimit}
+        quote={quote}
+      />
     </section>
   );
 };
