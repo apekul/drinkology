@@ -8,7 +8,6 @@ import ChangePagePanel from "./ChangePagePanel";
 const Search = () => {
   const [searchTags, setSearchTags] = useState({});
   const [diceRotate, setDiceRotate] = useState(false);
-  const [displayFilters, setDisplayFilters] = useState(true);
 
   // Pages
   const [pages, setPages] = useState(() => 1);
@@ -24,6 +23,11 @@ const Search = () => {
   const [category, setCategory] = useState(new Set());
   const [alcohol, setAlcohol] = useState(new Set());
   const [glass, setGlass] = useState(new Set());
+  const [showTags, setShowTags] = useState({
+    category: true,
+    alcohol: false,
+    glass: false,
+  });
 
   const updateTag = (cat, value) => {
     if (cat === "category") {
@@ -96,13 +100,12 @@ const Search = () => {
   };
 
   useEffect(() => {
-    if (quote.length > 0) fetchData();
+    quote.length > 0 ? fetchData() : setSearchResult([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quote]);
 
   useEffect(() => {
     fetchByCat();
-    // console.log(resultIDs);
   }, [category, glass, alcohol]);
 
   useEffect(() => {
@@ -164,28 +167,30 @@ const Search = () => {
               />
             </div>
           </div>
-
-          <div
-            className="text-[40px] cursor-pointer"
-            onClick={() => setDisplayFilters(!displayFilters)}
-          >
-            <MdOutlineArrowDropDown
-              className={`transition-all duration-[300ms] ${
-                displayFilters && "rotate-180"
-              }`}
-            />
-          </div>
         </div>
         {/* Categories */}
         <ul
-          className={`flex gap-3 flex-col flex-wrap border-b-2 pb-5 transition-all ${
-            displayFilters ? "block" : "hidden"
-          }`}
+          className={`flex gap-3 flex-col flex-wrap border-b-2 pb-5 transition-all`}
         >
           {Object.keys(searchTags).map((cat, index) => (
             <li key={index} className="flex flex-col gap-2">
-              <p>Filter by: {cat}</p>
-              <ul className="flex gap-2 flex-wrap">
+              <span className="flex items-center gap-2">
+                <p>Filter by: {cat}</p>
+                <MdOutlineArrowDropDown
+                  size={30}
+                  className={`transition-all duration-[400ms] cursor-pointer ${
+                    showTags[cat] && "rotate-180"
+                  }`}
+                  onClick={() =>
+                    setShowTags((prev) => ({ ...prev, [cat]: !prev[cat] }))
+                  }
+                />
+              </span>
+              <ul
+                className={`flex gap-2 flex-wrap ${
+                  showTags[cat] ? "block" : "hidden"
+                }`}
+              >
                 {searchTags[cat].map((v, i) => (
                   <li
                     key={i}
@@ -230,7 +235,6 @@ const Search = () => {
 
       {/* pages panel */}
       <ChangePagePanel pages={pages} setPageLimit={setPageLimit} />
-      {console.log(pageLimit)}
     </section>
   );
 };
