@@ -2,12 +2,21 @@ import React, { useState, useEffect } from "react";
 import { IoSearch } from "react-icons/io5";
 import { GiPerspectiveDiceSixFacesTwo } from "react-icons/gi";
 import DisplayItem from "./DisplayItem";
+import { MdOutlineArrowDropDown } from "react-icons/md";
+import ChangePagePanel from "./ChangePagePanel";
 
 const Search = () => {
   const [searchTags, setSearchTags] = useState({});
   const [diceRotate, setDiceRotate] = useState(false);
+  const [displayFilters, setDisplayFilters] = useState(true);
+
+  // Pages
+  const [pages, setPages] = useState(() => 1);
+  const [pageLimit, setPageLimit] = useState({ min: 0, max: 10 });
+
   // Result for display
   const [searchResult, setSearchResult] = useState([]);
+  const [resultIDs, setResultIDs] = useState([]);
   const [randomDrink, setRandomDrink] = useState(null);
   const [quote, setQuote] = useState("");
 
@@ -46,6 +55,30 @@ const Search = () => {
     }
   };
 
+  // Fetch data by categories
+  const fetchByCat = async () => {
+    let arrayOfCat = Array.from(category);
+    const byCat = "www.thecocktaildb.com/api/json/v1/1/filter.php?c=";
+    // const byID = "www.thecocktaildb.com/api/json/v1/1/lookup.php?i=";
+    let resultCat = new Set();
+
+    // let getDrinkByID = async (id) => {
+    //   let byIdResult = await fetch(`https://${byID}${id}`)
+    //     .then((response) => response.json())
+    //     .then((response) => response.drinks);
+    //   return byIdResult;
+    // };
+
+    for (let e of arrayOfCat) {
+      let getDrinkInfo = await fetch(`https://${byCat}${e}`)
+        .then((res) => res.json())
+        .then((res) => res.drinks);
+      resultCat = new Set([...resultCat, ...getDrinkInfo]);
+    }
+    return setResultIDs(resultCat);
+  };
+
+  // Fetch random drink
   const fetchRandomDrink = () => {
     const randomCoctail = "www.thecocktaildb.com/api/json/v1/1/random.php";
     fetch(`https://${randomCoctail}`)
@@ -53,6 +86,7 @@ const Search = () => {
       .then((res) => setRandomDrink(res.drinks[0]));
   };
 
+  // Fetch data by name
   const fetchData = async () => {
     const byName = "www.thecocktaildb.com/api/json/v1/1/search.php?s=";
     // const byIng = "www.thecocktaildb.com/api/json/v1/1/filter.php?i=";
@@ -65,6 +99,17 @@ const Search = () => {
     if (quote.length > 0) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quote]);
+
+  useEffect(() => {
+    fetchByCat();
+    // console.log(resultIDs);
+  }, [category, glass, alcohol]);
+
+  useEffect(() => {
+    searchResult && searchResult !== null
+      ? setPages(Math.ceil(searchResult.length / 10))
+      : setPages(1);
+  }, [searchResult]);
 
   // Fetch Drik category for search
   useEffect(() => {
@@ -93,8 +138,8 @@ const Search = () => {
 
   return (
     <section id="search" className="Container min-h-[50rem]">
-      <div className="my-10 p-3 bg-white rounded-md shadow-sm flex flex-col gap-3">
-        <div className="relative w-2/3 flex items-center gap-2">
+      <div className="mt-10 p-3 bg-white rounded-md shadow-sm flex flex-col gap-3">
+        <div className="relative w-full sm:w-2/3 flex items-center gap-2">
           <IoSearch
             className="absolute top-2.5 left-2.5 text-zinc-500"
             size="20"
@@ -112,16 +157,31 @@ const Search = () => {
                   setDiceRotate(!diceRotate);
                   return fetchRandomDrink();
                 }}
-                size="40"
+                size="40px"
                 className={`cursor-pointer transition-all duration-[550ms] text-purple-700 ${
                   diceRotate && "rotate-[360deg]"
                 }`}
               />
             </div>
           </div>
+
+          <div
+            className="text-[40px] cursor-pointer"
+            onClick={() => setDisplayFilters(!displayFilters)}
+          >
+            <MdOutlineArrowDropDown
+              className={`transition-all duration-[300ms] ${
+                displayFilters && "rotate-180"
+              }`}
+            />
+          </div>
         </div>
         {/* Categories */}
-        <ul className="flex gap-3 flex-col flex-wrap border-b-2 pb-5">
+        <ul
+          className={`flex gap-3 flex-col flex-wrap border-b-2 pb-5 transition-all ${
+            displayFilters ? "block" : "hidden"
+          }`}
+        >
           {Object.keys(searchTags).map((cat, index) => (
             <li key={index} className="flex flex-col gap-2">
               <p>Filter by: {cat}</p>
@@ -144,9 +204,9 @@ const Search = () => {
         </ul>
         {/* random drink */}
         {randomDrink && (
-          <div className="flex flex-col gap-5 border-b-2 pb-5">
+          <div className={`flex flex-col gap-5 border-b-2 pb-5`}>
             <p className="font-bold">Random Drink</p>
-            <DisplayItem item={randomDrink} bg="bg-indigo-200" />
+            <DisplayItem item={randomDrink} bg="bg-indigo-100" />
           </div>
         )}
         {/* Result */}
@@ -154,16 +214,23 @@ const Search = () => {
           <p className="font-bold">
             {searchResult?.length} results for "{quote}"
           </p>
-          {searchResult?.map((item, index) => (
-            <DisplayItem
-              item={item}
-              bg={index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"}
-              key={index}
-              className="bg-red-200"
-            />
-          ))}
+          {searchResult?.map(
+            (item, index) =>
+              index + 1 > pageLimit.min &&
+              index + 1 <= pageLimit.max && (
+                <DisplayItem
+                  item={item}
+                  bg={index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"}
+                  key={index}
+                />
+              )
+          )}
         </ul>
       </div>
+
+      {/* pages panel */}
+      <ChangePagePanel pages={pages} setPageLimit={setPageLimit} />
+      {console.log(pageLimit)}
     </section>
   );
 };
