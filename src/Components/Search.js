@@ -15,7 +15,7 @@ const Search = () => {
 
   // Result for display
   const [searchResult, setSearchResult] = useState([]);
-  const [resultIDs, setResultIDs] = useState([]);
+  // const [resultIDs, setResultIDs] = useState([]);
   const [randomDrink, setRandomDrink] = useState(null);
   const [quote, setQuote] = useState("");
 
@@ -79,7 +79,7 @@ const Search = () => {
         .then((res) => res.drinks);
       resultCat = new Set([...resultCat, ...getDrinkInfo]);
     }
-    return setResultIDs(resultCat);
+    // return setResultIDs(resultCat);
   };
 
   // Fetch random drink
@@ -172,6 +172,7 @@ const Search = () => {
         {/* Categories */}
         <ul
           className={`flex gap-3 flex-col flex-wrap border-b-2 pb-5 transition-all`}
+          id="categories"
         >
           {Object.keys(searchTags).map((cat, index) => (
             <li key={index} className="flex flex-col gap-2">

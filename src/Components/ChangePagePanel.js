@@ -10,6 +10,9 @@ const ChangePagePanel = ({ pages, setPageLimit, quote }) => {
       min: currentPage <= 1 ? 0 : (currentPage - 1) * pageNumberLimit,
       max: currentPage * pageNumberLimit,
     });
+    document
+      .getElementById("categories")
+      .scrollIntoView({ behavior: "smooth" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
