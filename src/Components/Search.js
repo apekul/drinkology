@@ -106,6 +106,7 @@ const Search = () => {
 
   useEffect(() => {
     fetchByCat();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, glass, alcohol]);
 
   useEffect(() => {

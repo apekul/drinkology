@@ -10,6 +10,7 @@ const ChangePagePanel = ({ pages, setPageLimit, quote }) => {
       min: currentPage <= 1 ? 0 : (currentPage - 1) * pageNumberLimit,
       max: currentPage * pageNumberLimit,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   useEffect(() => {
