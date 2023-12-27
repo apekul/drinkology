@@ -10,6 +10,8 @@ Drink/Cocktail database website with one page user friendly design. Search for d
 
 
 ### Demo
+[Demo link](https://drinkology.netlify.app/)
+
 
 
 
