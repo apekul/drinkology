@@ -9,7 +9,7 @@ const DisplayItem = ({ item, bg }) => {
       <img
         src={item.strDrinkThumb}
         alt={item.strDrink}
-        className="w-full sm:w-[20rem] h-full rounded-md col-span-3 sm:col-span-1"
+        className="w-full sm:w-[20rem] h-auto rounded-md col-span-3 sm:col-span-1"
       />
       {/* Ingredients */}
       <ul className="flex flex-col w-full flex-wrap max:h-[10rem] gap-2 overflow-x-auto sm:col-start-2 col-span-3 sm:row-start-1 ">
