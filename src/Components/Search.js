@@ -89,6 +89,9 @@ const Search = () => {
     fetch(`https://${randomCoctail}`)
       .then((res) => res.json())
       .then((res) => setRandomDrink(res.drinks[0]));
+    document
+      .getElementById("randomDrink")
+      .scrollIntoView({ behavior: "smooth" });
   };
 
   // Fetch data by name
@@ -247,13 +250,16 @@ const Search = () => {
         </ul>
         {/* random drink */}
         {randomDrink && (
-          <div className={`flex flex-col gap-5 border-b-2 pb-5`}>
+          <div
+            className={`flex flex-col gap-5 border-b-2 pb-5`}
+            id="randomDrink"
+          >
             <p className="font-bold">Random Drink</p>
             <DisplayItem item={randomDrink} bg="bg-indigo-100" />
           </div>
         )}
         {/* Result */}
-        <ul className="flex flex-col gap-5">
+        <ul className="flex flex-col gap-5" id="drinkResults">
           <p className="font-bold">
             {searchResult?.length} results for "{quote}"
           </p>

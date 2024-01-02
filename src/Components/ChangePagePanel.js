@@ -9,7 +9,9 @@ const ChangePagePanel = ({ pages, setPageLimit, quote, pageNumberLimit }) => {
       min: currentPage <= 1 ? 0 : (currentPage - 1) * pageNumberLimit,
       max: currentPage * pageNumberLimit,
     });
-    document.getElementById("searchBar").scrollIntoView({ behavior: "smooth" });
+    document
+      .getElementById("drinkResults")
+      .scrollIntoView({ behavior: "smooth" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
