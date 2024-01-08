@@ -16,6 +16,7 @@ const Search = () => {
 
   // Result for display
   const [searchResult, setSearchResult] = useState([]);
+  const [filteredResults, setFilteredResults] = useState([]);
   // const [resultIDs, setResultIDs] = useState([]);
   const [randomDrink, setRandomDrink] = useState(null);
   const [quote, setQuote] = useState("");
@@ -63,9 +64,18 @@ const Search = () => {
   // Fetch data by categories
   const fetchByCat = async () => {
     let arrayOfCat = Array.from(category);
-    const byCat = "www.thecocktaildb.com/api/json/v1/1/filter.php?c=";
+    let arrayOfAlc = Array.from(alcohol);
+    let arrayOfGla = Array.from(glass);
+    const link = "www.thecocktaildb.com/api/json/v1/1/filter.php?";
     // const byID = "www.thecocktaildb.com/api/json/v1/1/lookup.php?i=";
     let resultCat = new Set();
+    let resultAlc = new Set();
+    let resultGla = new Set();
+    // let quoteResult = fet
+
+    // done  if quote is empty then fetch all selected category and add them to set collection to remove duplicates
+    // if quote is not empty, filter searchResult to match selected category
+    // Create function that fetch drink info by ID of a single drink and add result to return of the component
 
     // let getDrinkByID = async (id) => {
     //   let byIdResult = await fetch(`https://${byID}${id}`)
@@ -73,14 +83,33 @@ const Search = () => {
     //     .then((response) => response.drinks);
     //   return byIdResult;
     // };
-
-    for (let e of arrayOfCat) {
-      let getDrinkInfo = await fetch(`https://${byCat}${e}`)
-        .then((res) => res.json())
-        .then((res) => res.drinks);
-      resultCat = new Set([...resultCat, ...getDrinkInfo]);
+    if (quote.length <= 0) {
+      for (let e of arrayOfCat) {
+        let getDrinkInfo = await fetch(`https://${link}c=${e}`)
+          .then((res) => res.json())
+          .then((res) => res.drinks);
+        resultCat = new Set([...resultCat, ...getDrinkInfo]);
+      }
+      for (let e of arrayOfAlc) {
+        let getDrinkInfo = await fetch(`https://${link}a=${e}`)
+          .then((res) => res.json())
+          .then((res) => res.drinks);
+        resultAlc = new Set([...resultAlc, ...getDrinkInfo]);
+      }
+      for (let e of arrayOfGla) {
+        let getDrinkInfo = await fetch(`https://${link}g=${e}`)
+          .then((res) => res.json())
+          .then((res) => res.drinks);
+        resultGla = new Set([...resultGla, ...getDrinkInfo]);
+      }
+      return console.log(
+        Array.from(new Set([...resultCat, ...resultAlc, ...resultGla]))
+      );
+    } else {
+      setFilteredResults((prev) =>
+        prev.filter((drink) => arrayOfCat.includes(drink.strCategory))
+      );
     }
-    // return setResultIDs(resultCat);
   };
 
   // Fetch random drink
