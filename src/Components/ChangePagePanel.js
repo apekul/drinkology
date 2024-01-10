@@ -25,9 +25,10 @@ const ChangePagePanel = ({ pages, setPageLimit, quote, pageNumberLimit }) => {
         <>
           <MdArrowBackIosNew
             size={30}
-            className={`bg-gray-300 text-gray-400 p-1 ${
-              currentPage !== 1 &&
-              "text-black cursor-pointer hover:brightness-95"
+            className={`bg-gray-300 p-1 ${
+              currentPage !== 1
+                ? "text-black cursor-pointer hover:brightness-95"
+                : "text-gray-400"
             }`}
             onClick={() =>
               setCurrentPage((prev) => (prev === 1 ? 1 : prev - 1))
@@ -47,9 +48,10 @@ const ChangePagePanel = ({ pages, setPageLimit, quote, pageNumberLimit }) => {
           ))}
           <MdArrowForwardIos
             size={30}
-            className={`bg-gray-300 text-gray-400 p-1 ${
-              currentPage !== pages &&
-              "text-black cursor-pointer hover:brightness-95"
+            className={`bg-gray-300  p-1 ${
+              currentPage !== pages
+                ? "text-black cursor-pointer hover:brightness-95"
+                : "text-gray-400"
             }`}
             onClick={() =>
               setCurrentPage((prev) => (prev === pages ? pages : prev + 1))
