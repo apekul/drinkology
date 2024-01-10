@@ -83,33 +83,27 @@ const Search = () => {
     //     .then((response) => response.drinks);
     //   return byIdResult;
     // };
-    if (quote.length <= 0) {
-      for (let e of arrayOfCat) {
-        let getDrinkInfo = await fetch(`https://${link}c=${e}`)
-          .then((res) => res.json())
-          .then((res) => res.drinks);
-        resultCat = new Set([...resultCat, ...getDrinkInfo]);
-      }
-      for (let e of arrayOfAlc) {
-        let getDrinkInfo = await fetch(`https://${link}a=${e}`)
-          .then((res) => res.json())
-          .then((res) => res.drinks);
-        resultAlc = new Set([...resultAlc, ...getDrinkInfo]);
-      }
-      for (let e of arrayOfGla) {
-        let getDrinkInfo = await fetch(`https://${link}g=${e}`)
-          .then((res) => res.json())
-          .then((res) => res.drinks);
-        resultGla = new Set([...resultGla, ...getDrinkInfo]);
-      }
-      return console.log(
-        Array.from(new Set([...resultCat, ...resultAlc, ...resultGla]))
-      );
-    } else {
-      setFilteredResults((prev) =>
-        prev.filter((drink) => arrayOfCat.includes(drink.strCategory))
-      );
+    for (let e of arrayOfCat) {
+      let getDrinkInfo = await fetch(`https://${link}c=${e}`)
+        .then((res) => res.json())
+        .then((res) => res.drinks);
+      resultCat = new Set([...resultCat, ...getDrinkInfo]);
     }
+    for (let e of arrayOfAlc) {
+      let getDrinkInfo = await fetch(`https://${link}a=${e}`)
+        .then((res) => res.json())
+        .then((res) => res.drinks);
+      resultAlc = new Set([...resultAlc, ...getDrinkInfo]);
+    }
+    for (let e of arrayOfGla) {
+      let getDrinkInfo = await fetch(`https://${link}g=${e}`)
+        .then((res) => res.json())
+        .then((res) => res.drinks);
+      resultGla = new Set([...resultGla, ...getDrinkInfo]);
+    }
+    return console.log(
+      Array.from(new Set([...resultCat, ...resultAlc, ...resultGla]))
+    );
   };
 
   // Fetch random drink
@@ -129,7 +123,21 @@ const Search = () => {
     // const byIng = "www.thecocktaildb.com/api/json/v1/1/filter.php?i=";
     fetch(`https://${byName}${quote}`)
       .then((res) => res.json())
-      .then((res) => setSearchResult(res.drinks));
+      .then((res) => {
+        setSearchResult(res.drinks);
+        setFilteredResults(res.drinks);
+      });
+  };
+
+  // Filters drinks to match selected tags
+  const filterResult = (arrayOfCat, arrayOfAlc, arrayOfGla) => {
+    let newResult = searchResult.filter(
+      (drink) =>
+        arrayOfCat.includes(drink.strCategory) ||
+        arrayOfAlc.includes(drink.strAlcoholic) ||
+        arrayOfGla.includes(drink.strGlass)
+    );
+    setFilteredResults(newResult);
   };
 
   useEffect(() => {
@@ -138,15 +146,26 @@ const Search = () => {
   }, [quote]);
 
   useEffect(() => {
-    fetchByCat();
+    let arrayOfCat = Array.from(category);
+    let arrayOfAlc = Array.from(alcohol);
+    let arrayOfGla = Array.from(glass);
+    let length = [...arrayOfCat, ...arrayOfAlc, ...arrayOfGla].length;
+    if (quote.length <= 0) {
+      fetchByCat();
+    }
+    if (length <= 0) {
+      setFilteredResults(searchResult);
+    } else {
+      filterResult(arrayOfCat, arrayOfAlc, arrayOfGla);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, glass, alcohol]);
 
   useEffect(() => {
-    searchResult && searchResult !== null
-      ? setPages(Math.ceil(searchResult.length / pageNumberLimit))
+    filteredResults && filteredResults !== null
+      ? setPages(Math.ceil(filteredResults.length / pageNumberLimit))
       : setPages(1);
-  }, [searchResult]);
+  }, [filteredResults]);
 
   // Fetch Drik category for search
   useEffect(() => {
@@ -290,9 +309,9 @@ const Search = () => {
         {/* Result */}
         <ul className="flex flex-col gap-5" id="drinkResults">
           <p className="font-bold">
-            {searchResult?.length} results for "{quote}"
+            {filteredResults?.length} results for "{quote}"
           </p>
-          {searchResult?.map(
+          {filteredResults?.map(
             (item, index) =>
               index + 1 > pageLimit.min &&
               index + 1 <= pageLimit.max && (
