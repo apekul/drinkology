@@ -1,16 +1,23 @@
 import React from "react";
 import { tagColors } from "../Object";
+import { IoClose } from "react-icons/io5";
 
-const DisplayItem = ({ item, bg }) => {
+const DisplayItem = ({ item, bg, setRandomDrink }) => {
   return (
     <li
-      className={`grid grid-cols-3 grid-flow-row auto-rows-max lg:flex w-full gap-3 rounded-md p-3 shadow h-fit lg:h-[20rem] ${bg}`}
+      className={`relative grid grid-cols-3 grid-flow-row auto-rows-max lg:flex w-full gap-3 rounded-md p-3 shadow h-fit lg:h-[20rem] ${bg}`}
     >
       <img
         src={item.strDrinkThumb}
         alt={item.strDrink}
         className="w-full sm:w-[20rem] h-auto rounded-md col-span-3 sm:col-span-1"
       />
+      {setRandomDrink && (
+        <IoClose
+          onClick={() => setRandomDrink(null)}
+          className="absolute right-1 text-2xl top-1 cursor-pointer text-gray-400 hover:text-black"
+        />
+      )}
       {/* Ingredients */}
       <ul className="flex flex-col w-full flex-wrap max:h-[10rem] gap-2 overflow-x-auto sm:col-start-2 col-span-3 sm:row-start-1 ">
         {Object.keys(item).map(
