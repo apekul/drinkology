@@ -95,9 +95,9 @@ const Search = () => {
         .then((res) => res.drinks);
       resultGla = new Set([...resultGla, ...getDrinkInfo]);
     }
-    return console.log(
-      Array.from(new Set([...resultCat, ...resultAlc, ...resultGla]))
-    );
+    // return console.log(
+    //   Array.from(new Set([...resultCat, ...resultAlc, ...resultGla]))
+    // );
   };
 
   // Fetch random drink
@@ -144,7 +144,13 @@ const Search = () => {
   }, [quote]);
 
   useEffect(() => {
-    // setFilteredResults(searchResult);
+    let arrayOfCat = Array.from(category);
+    let arrayOfAlc = Array.from(alcohol);
+    let arrayOfGla = Array.from(glass);
+    let group = [...arrayOfCat, ...arrayOfAlc, ...arrayOfGla];
+    if (group.length <= 0) {
+      return setFilteredResults(searchResult);
+    }
     filterResult();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchResult]);
