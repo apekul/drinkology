@@ -67,15 +67,9 @@ const Search = () => {
     let arrayOfAlc = Array.from(alcohol);
     let arrayOfGla = Array.from(glass);
     const link = "www.thecocktaildb.com/api/json/v1/1/filter.php?";
-    // const byID = "www.thecocktaildb.com/api/json/v1/1/lookup.php?i=";
     let resultCat = new Set();
     let resultAlc = new Set();
     let resultGla = new Set();
-    // let quoteResult = fet
-
-    // done  if quote is empty then fetch all selected category and add them to set collection to remove duplicates
-    // if quote is not empty, filter searchResult to match selected category
-    // Create function that fetch drink info by ID of a single drink and add result to return of the component
 
     // let getDrinkByID = async (id) => {
     //   let byIdResult = await fetch(`https://${byID}${id}`)
@@ -130,7 +124,11 @@ const Search = () => {
   };
 
   // Filters drinks to match selected tags
-  const filterResult = (arrayOfCat, arrayOfAlc, arrayOfGla) => {
+  const filterResult = () => {
+    let arrayOfCat = Array.from(category);
+    let arrayOfAlc = Array.from(alcohol);
+    let arrayOfGla = Array.from(glass);
+    if (!searchResult || searchResult === null) return;
     let newResult = searchResult.filter(
       (drink) =>
         arrayOfCat.includes(drink.strCategory) ||
@@ -146,6 +144,12 @@ const Search = () => {
   }, [quote]);
 
   useEffect(() => {
+    // setFilteredResults(searchResult);
+    filterResult();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchResult]);
+
+  useEffect(() => {
     let arrayOfCat = Array.from(category);
     let arrayOfAlc = Array.from(alcohol);
     let arrayOfGla = Array.from(glass);
@@ -156,7 +160,7 @@ const Search = () => {
     if (length <= 0) {
       setFilteredResults(searchResult);
     } else {
-      filterResult(arrayOfCat, arrayOfAlc, arrayOfGla);
+      filterResult();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, glass, alcohol]);
@@ -309,7 +313,8 @@ const Search = () => {
         {/* Result */}
         <ul className="flex flex-col gap-5" id="drinkResults">
           <p className="font-bold">
-            {filteredResults?.length} results for "{quote}"
+            {filteredResults ? filteredResults?.length : "0"} results for "
+            {quote}"
           </p>
           {filteredResults?.map(
             (item, index) =>
