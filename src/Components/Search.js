@@ -95,9 +95,9 @@ const Search = () => {
         .then((res) => res.drinks);
       resultGla = new Set([...resultGla, ...getDrinkInfo]);
     }
-    // return console.log(
-    //   Array.from(new Set([...resultCat, ...resultAlc, ...resultGla]))
-    // );
+    return setSearchResult(
+      Array.from(new Set([...resultCat, ...resultAlc, ...resultGla]))
+    );
   };
 
   // Fetch random drink
@@ -139,7 +139,13 @@ const Search = () => {
   };
 
   useEffect(() => {
-    quote.length > 0 ? fetchData() : setSearchResult([]);
+    let arrayOfCat = Array.from(category);
+    let arrayOfAlc = Array.from(alcohol);
+    let arrayOfGla = Array.from(glass);
+    let group = [...arrayOfCat, ...arrayOfAlc, ...arrayOfGla];
+    quote.length > 0 && fetchData();
+    quote.length <= 0 && group.length > 0 && fetchByCat();
+    quote.length <= 0 && group.length <= 0 && setSearchResult([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quote]);
 
@@ -322,8 +328,10 @@ const Search = () => {
         {/* Result */}
         <ul className="flex flex-col gap-5" id="drinkResults">
           <p className="font-bold">
-            {filteredResults ? filteredResults?.length : "0"} results for "
-            {quote}"
+            {filteredResults?.length === 0
+              ? searchResult.length
+              : filteredResults?.length}{" "}
+            results for "{quote}"
           </p>
           {filteredResults?.map(
             (item, index) =>
