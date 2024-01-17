@@ -71,12 +71,6 @@ const Search = () => {
     let resultAlc = new Set();
     let resultGla = new Set();
 
-    // let getDrinkByID = async (id) => {
-    //   let byIdResult = await fetch(`https://${byID}${id}`)
-    //     .then((response) => response.json())
-    //     .then((response) => response.drinks);
-    //   return byIdResult;
-    // };
     for (let e of arrayOfCat) {
       let getDrinkInfo = await fetch(`https://${link}c=${e}`)
         .then((res) => res.json())
@@ -99,6 +93,16 @@ const Search = () => {
       Array.from(new Set([...resultCat, ...resultAlc, ...resultGla]))
     );
   };
+
+  // Fix paggination, when too many pages then content is pushed outside of the window
+  // Create a function that fetch displayed data by ID
+  // const fetchByID = async (id) => {
+  //   let link = "www.thecocktaildb.com/api/json/v1/1/lookup.php?i=";
+  //   let byIdResult = await fetch(`https://${link}${id}`)
+  //     .then((response) => response.json())
+  //     .then((response) => response.drinks[0]);
+  //   return console.log(byIdResult);
+  // };
 
   // Fetch random drink
   const fetchRandomDrink = () => {
@@ -128,7 +132,7 @@ const Search = () => {
     let arrayOfCat = Array.from(category);
     let arrayOfAlc = Array.from(alcohol);
     let arrayOfGla = Array.from(glass);
-    if (!searchResult || searchResult === null) return;
+    // if (!searchResult || searchResult === null) return;
     let newResult = searchResult.filter(
       (drink) =>
         arrayOfCat.includes(drink.strCategory) ||
@@ -157,7 +161,8 @@ const Search = () => {
     if (group.length <= 0) {
       return setFilteredResults(searchResult);
     }
-    filterResult();
+    setFilteredResults(searchResult);
+    // filterResult();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchResult]);
 
@@ -337,11 +342,13 @@ const Search = () => {
             (item, index) =>
               index + 1 > pageLimit.min &&
               index + 1 <= pageLimit.max && (
-                <DisplayItem
-                  item={item}
-                  bg={index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"}
-                  key={index}
-                />
+                <>
+                  <DisplayItem
+                    item={item}
+                    bg={index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"}
+                    key={index}
+                  />
+                </>
               )
           )}
         </ul>
