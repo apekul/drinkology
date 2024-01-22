@@ -3,6 +3,7 @@ import { tagColors } from "../Object";
 import { IoClose } from "react-icons/io5";
 
 const DisplayItem = ({ item, bg, setRandomDrink }) => {
+  // console.log(item);
   return (
     <li
       className={`relative grid grid-cols-3 grid-flow-row auto-rows-max lg:flex w-full gap-3 rounded-md p-3 shadow h-fit lg:h-[20rem] ${bg}`}

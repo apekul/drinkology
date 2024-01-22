@@ -96,14 +96,20 @@ const Search = () => {
 
   // Fix paggination, when too many pages then content is pushed outside of the window
   // Create a function that fetch displayed data by ID
-  // const fetchByID = async (id) => {
-  //   let link = "www.thecocktaildb.com/api/json/v1/1/lookup.php?i=";
-  //   let byIdResult = await fetch(`https://${link}${id}`)
-  //     .then((response) => response.json())
-  //     .then((response) => response.drinks[0]);
-  //   return console.log(byIdResult);
-  // };
-
+  const fetchByID = async (id) => {
+    let link = "www.thecocktaildb.com/api/json/v1/1/lookup.php?i=";
+    try {
+      const res = await fetch(`https://${link}${id}`);
+      const result = await res.json();
+      return result.drinks[0];
+    } catch (err) {
+      console.log(err);
+    }
+    // let byIdResult = await fetch(`https://${link}${id}`)
+    //   .then((response) => response.json())
+    //   .then((response) => response.drinks[0]);
+    // return byIdResult;
+  };
   // Fetch random drink
   const fetchRandomDrink = () => {
     const randomCoctail = "www.thecocktaildb.com/api/json/v1/1/random.php";
@@ -126,7 +132,6 @@ const Search = () => {
         setFilteredResults(res.drinks);
       });
   };
-
   // Filters drinks to match selected tags
   const filterResult = () => {
     let arrayOfCat = Array.from(category);
@@ -338,19 +343,20 @@ const Search = () => {
               : filteredResults?.length}{" "}
             results for "{quote}"
           </p>
-          {filteredResults?.map(
-            (item, index) =>
+          {filteredResults?.map((item, index) => {
+            return (
               index + 1 > pageLimit.min &&
               index + 1 <= pageLimit.max && (
                 <>
                   <DisplayItem
-                    item={item}
+                    item={index === 0 ? fetchByID(item.idDrink) : item}
                     bg={index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"}
                     key={index}
                   />
                 </>
               )
-          )}
+            );
+          })}
         </ul>
       </div>
 
