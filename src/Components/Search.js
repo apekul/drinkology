@@ -330,7 +330,7 @@ const Search = () => {
             {filteredResults?.length === 0
               ? searchResult.length
               : filteredResults?.length}{" "}
-            results for "{quote}"
+            results
           </p>
           {filteredResults?.map((item, index) => {
             return (
