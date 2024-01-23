@@ -1,16 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { tagColors } from "../Object";
 import { IoClose } from "react-icons/io5";
 
 const DisplayItem = ({ item, bg, setRandomDrink }) => {
-  // console.log(item);
+  const [newItem, setNewItem] = useState(item);
+
+  const fetchByID = async (id) => {
+    let link = "www.thecocktaildb.com/api/json/v1/1/lookup.php?i=";
+
+    let byIdResult = await fetch(`https://${link}${id}`)
+      .then((response) => response.json())
+      .then((response) => response.drinks[0]);
+    return setNewItem(byIdResult);
+  };
+
+  useEffect(() => {
+    // item.strIngredient1 === undefined && fetchByID(item.idDrink);
+  }, []);
   return (
     <li
       className={`relative grid grid-cols-3 grid-flow-row auto-rows-max lg:flex w-full gap-3 rounded-md p-3 shadow h-fit lg:h-[20rem] ${bg}`}
     >
       <img
-        src={item.strDrinkThumb}
-        alt={item.strDrink}
+        src={newItem.strDrinkThumb}
+        alt={newItem.strDrink}
         className="w-full sm:w-[20rem] h-auto rounded-md col-span-3 sm:col-span-1"
       />
       {setRandomDrink && (
@@ -21,23 +34,23 @@ const DisplayItem = ({ item, bg, setRandomDrink }) => {
       )}
       {/* Ingredients */}
       <ul className="flex flex-col w-full flex-wrap max:h-[10rem] gap-2 overflow-x-auto sm:col-start-2 col-span-3 sm:row-start-1 ">
-        {Object.keys(item).map(
+        {Object.keys(newItem).map(
           (v, i) =>
             v.includes("strIngredient") &&
-            item[v] !== null &&
-            item[v].length !== 0 && (
+            newItem[v] !== null &&
+            newItem[v].length !== 0 && (
               <li
                 key={i}
                 className="flex text-center items-center gap-2 h-auto"
               >
                 <img
-                  src={`https://www.thecocktaildb.com/images/ingredients/${item[v]}-Medium.png`}
-                  alt={item.strIngredient1}
+                  src={`https://www.thecocktaildb.com/images/ingredients/${newItem[v]}-Medium.png`}
+                  alt={newItem.strIngredient1}
                   className="w-[2rem] h-[2rem]"
                 />
                 <span className="flex gap-2 whitespace-nowrap">
-                  <p>{item["strMeasure" + v.replace(/\D/g, "")]}</p>
-                  <p className="font-bold">{item[v]}</p>
+                  <p>{newItem["strMeasure" + v.replace(/\D/g, "")]}</p>
+                  <p className="font-bold">{newItem[v]}</p>
                 </span>
               </li>
             )
@@ -45,9 +58,9 @@ const DisplayItem = ({ item, bg, setRandomDrink }) => {
       </ul>
       <div className="flex flex-col justify-between w-full h-fit lg:h-full col-span-3 rows-start-3 ">
         <span className="flex flex-col gap-2">
-          <p className="font-bold text-2xl">{item.strDrink}</p>
+          <p className="font-bold text-2xl">{newItem.strDrink}</p>
           <p className="max-h-[11rem] overflow-y-auto">
-            {item.strInstructions}
+            {newItem.strInstructions}
           </p>
         </span>
         {/* tags */}
@@ -55,19 +68,19 @@ const DisplayItem = ({ item, bg, setRandomDrink }) => {
           <p
             className={`py-1 font-bold px-2 rounded-md cursor-pointer ${tagColors[0]} hover:brightness-105`}
           >
-            {item.strAlcoholic}
+            {newItem.strAlcoholic}
           </p>
           <p
             className={`py-1 font-bold px-2 rounded-md cursor-pointer ${tagColors[1]} hover:brightness-105`}
           >
-            {item.strCategory}
+            {newItem.strCategory}
           </p>
           <p
             className={`py-1 font-bold px-2 rounded-md cursor-pointer ${tagColors[2]} hover:brightness-105`}
           >
-            {item.strGlass}
+            {newItem.strGlass}
           </p>
-          {item.strTags?.split(",").map((tag, i) => (
+          {newItem.strTags?.split(",").map((tag, i) => (
             <p
               key={i}
               className={`py-1 font-bold px-2 rounded-md cursor-pointer ${

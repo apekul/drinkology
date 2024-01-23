@@ -5,6 +5,8 @@ import DisplayItem from "./DisplayItem";
 import { MdOutlineArrowDropDown } from "react-icons/md";
 import ChangePagePanel from "./ChangePagePanel";
 
+// Fix paggination, when too many pages then content is pushed outside of the window
+
 const Search = () => {
   const [searchTags, setSearchTags] = useState({});
   const [diceRotate, setDiceRotate] = useState(false);
@@ -94,22 +96,6 @@ const Search = () => {
     );
   };
 
-  // Fix paggination, when too many pages then content is pushed outside of the window
-  // Create a function that fetch displayed data by ID
-  const fetchByID = async (id) => {
-    let link = "www.thecocktaildb.com/api/json/v1/1/lookup.php?i=";
-    try {
-      const res = await fetch(`https://${link}${id}`);
-      const result = await res.json();
-      return result.drinks[0];
-    } catch (err) {
-      console.log(err);
-    }
-    // let byIdResult = await fetch(`https://${link}${id}`)
-    //   .then((response) => response.json())
-    //   .then((response) => response.drinks[0]);
-    // return byIdResult;
-  };
   // Fetch random drink
   const fetchRandomDrink = () => {
     const randomCoctail = "www.thecocktaildb.com/api/json/v1/1/random.php";
@@ -347,13 +333,11 @@ const Search = () => {
             return (
               index + 1 > pageLimit.min &&
               index + 1 <= pageLimit.max && (
-                <>
-                  <DisplayItem
-                    item={index === 0 ? fetchByID(item.idDrink) : item}
-                    bg={index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"}
-                    key={index}
-                  />
-                </>
+                <DisplayItem
+                  item={item}
+                  bg={index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"}
+                  key={index}
+                />
               )
             );
           })}
