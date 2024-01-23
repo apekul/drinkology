@@ -205,7 +205,10 @@ const Search = () => {
   }, []);
 
   return (
-    <section id="search" className="Container min-h-[50rem]">
+    <section
+      id="search"
+      className="Container min-h-[50rem] flex flex-col justify-between"
+    >
       <div
         className="mt-10 p-3 bg-white rounded-md shadow-sm flex flex-col gap-3"
         id="searchBar"

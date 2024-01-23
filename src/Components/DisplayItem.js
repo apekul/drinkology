@@ -4,7 +4,6 @@ import { IoClose } from "react-icons/io5";
 
 const DisplayItem = ({ item, bg, setRandomDrink }) => {
   const [newItem, setNewItem] = useState(item);
-
   const fetchByID = async (id) => {
     let link = "www.thecocktaildb.com/api/json/v1/1/lookup.php?i=";
 
@@ -15,7 +14,7 @@ const DisplayItem = ({ item, bg, setRandomDrink }) => {
   };
 
   useEffect(() => {
-    // item.strIngredient1 === undefined && fetchByID(item.idDrink);
+    item.strIngredient1 === undefined && fetchByID(item.idDrink);
   }, []);
   return (
     <li

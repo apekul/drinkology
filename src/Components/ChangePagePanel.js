@@ -3,14 +3,16 @@ import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
 
 const ChangePagePanel = ({ pages, setPageLimit, quote, pageNumberLimit }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [showPageList, setShowPageList] = useState(false);
 
   useEffect(() => {
     setPageLimit({
       min: currentPage <= 1 ? 0 : (currentPage - 1) * pageNumberLimit,
       max: currentPage * pageNumberLimit,
     });
-    document.getElementById("drinkResults");
-    // .scrollIntoView({ behavior: "smooth" });
+    document
+      .getElementById("drinkResults")
+      .scrollIntoView({ behavior: "smooth" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
@@ -19,7 +21,7 @@ const ChangePagePanel = ({ pages, setPageLimit, quote, pageNumberLimit }) => {
   }, [quote]);
 
   return (
-    <div className="flex text-xl gap-3 my-5 items-center justify-center w-full select-none">
+    <div className="flex w-full gap-3 my-5 items-center justify-center text-xl select-none">
       {pages > 1 && (
         <>
           <MdArrowBackIosNew
@@ -42,9 +44,9 @@ const ChangePagePanel = ({ pages, setPageLimit, quote, pageNumberLimit }) => {
                 <div key={i}>
                   <p
                     onClick={() => setCurrentPage(i + 1)}
-                    className={`${
-                      i + 1 === currentPage && "border-black"
-                    } cursor-pointer bg-gray-300 w-8 text-center py-1 border`}
+                    className={`cursor-pointer bg-gray-300 w-8 text-center py-1 border ${
+                      currentPage === i + 1 && "border-black"
+                    }`}
                   >
                     {i + 1}
                   </p>
@@ -52,9 +54,33 @@ const ChangePagePanel = ({ pages, setPageLimit, quote, pageNumberLimit }) => {
               )
             );
           })}
+          {/* dropdown page select */}
+          <div className="flex relative items-end justify-center cursor-pointer">
+            <p
+              className="border border-black w-8 text-center underline rounded-sm"
+              onClick={() => setShowPageList(!showPageList)}
+            >
+              {currentPage}
+            </p>
+            {showPageList && (
+              <div className="absolute bottom-8 bg-white border border-black w-8 text-center">
+                {Array.from({ length: pages }).map((_, i) => (
+                  <p
+                    className="hover:bg-gray-200"
+                    onClick={() => {
+                      setCurrentPage(i + 1);
+                      setShowPageList(false);
+                    }}
+                  >
+                    {i + 1}
+                  </p>
+                ))}
+              </div>
+            )}
+          </div>
           <MdArrowForwardIos
             size={30}
-            className={`bg-gray-300  p-1 ${
+            className={`bg-gray-300 p-1 ${
               currentPage !== pages
                 ? "text-black cursor-pointer hover:brightness-95"
                 : "text-gray-400"
