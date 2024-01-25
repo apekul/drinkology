@@ -68,13 +68,19 @@ const Search = () => {
     let arrayOfCat = Array.from(category);
     let arrayOfAlc = Array.from(alcohol);
     let arrayOfGla = Array.from(glass);
+    // Api endpoint
     const link = "www.thecocktaildb.com/api/json/v1/1/filter.php?";
+
+    // Mock api endpoint
+    let mockServer =
+      "https://4167e7bb-fa60-4b38-927e-2cf225a76684.mock.pstmn.io/api/json/v1/1/filter.php?";
+
     let resultCat = new Set();
     let resultAlc = new Set();
     let resultGla = new Set();
 
     for (let e of arrayOfCat) {
-      let getDrinkInfo = await fetch(`https://${link}c=${e}`)
+      let getDrinkInfo = await fetch(`${mockServer}c=${e}`)
         .then((res) => res.json())
         .then((res) => res.drinks);
       resultCat = new Set([...resultCat, ...getDrinkInfo]);
@@ -110,7 +116,6 @@ const Search = () => {
   // Fetch data by name
   const fetchData = async () => {
     const byName = "www.thecocktaildb.com/api/json/v1/1/search.php?s=";
-    // const byIng = "www.thecocktaildb.com/api/json/v1/1/filter.php?i=";
     fetch(`https://${byName}${quote}`)
       .then((res) => res.json())
       .then((res) => {
@@ -179,17 +184,14 @@ const Search = () => {
       : setPages(1);
   }, [filteredResults]);
 
-  // Fetch Drik category for search
   useEffect(() => {
-    const catReq = fetch(
-      "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list"
-    ).then((response) => response.json());
-    const glassReq = fetch(
-      "https://www.thecocktaildb.com/api/json/v1/1/list.php?g=list"
-    ).then((response) => response.json());
-    const alcoReq = fetch(
-      "https://www.thecocktaildb.com/api/json/v1/1/list.php?a=list"
-    ).then((response) => response.json());
+    // Fetch drink category tags to display in filter search section
+    // From Mock server
+    let mock =
+      "https://4167e7bb-fa60-4b38-927e-2cf225a76684.mock.pstmn.io/api/json/v1/1/list.php?";
+    const catReq = fetch(`${mock}c=list`).then((response) => response.json());
+    const glassReq = fetch(`${mock}g=list`).then((response) => response.json());
+    const alcoReq = fetch(`${mock}a=list`).then((response) => response.json());
 
     Promise.all([catReq, glassReq, alcoReq])
       .then(([category, glass, alcohol]) => {

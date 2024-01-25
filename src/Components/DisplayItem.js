@@ -9,7 +9,11 @@ const DisplayItem = ({ item, bg, setRandomDrink }) => {
 
     let byIdResult = await fetch(`https://${link}${id}`)
       .then((response) => response.json())
-      .then((response) => response.drinks[0]);
+      .then((response) => response.drinks[0])
+      .catch((error) => {
+        console.log(error);
+        return setNewItem(item);
+      });
     return setNewItem(byIdResult);
   };
 

@@ -71,29 +71,31 @@ const ChangePagePanel = ({ pages, setPageLimit, quote, pageNumberLimit }) => {
         )}
       </div>
       {/* dropdown page select */}
-      <div className="flex relative items-end justify-center cursor-pointer">
-        <p
-          className="border border-black w-8 text-center underline rounded-sm"
-          onClick={() => setShowPageList(!showPageList)}
-        >
-          {currentPage}
-        </p>
-        {showPageList && (
-          <div className="absolute bottom-8 bg-white border border-black w-8 text-center">
-            {Array.from({ length: pages }).map((_, i) => (
-              <p
-                className="hover:bg-gray-200"
-                onClick={() => {
-                  setCurrentPage(i + 1);
-                  setShowPageList(false);
-                }}
-              >
-                {i + 1}
-              </p>
-            ))}
-          </div>
-        )}
-      </div>
+      {pages > 1 && (
+        <div className="flex relative items-end justify-center cursor-pointer">
+          <p
+            className="border border-black w-8 text-center underline rounded-sm"
+            onClick={() => setShowPageList(!showPageList)}
+          >
+            {currentPage}
+          </p>
+          {showPageList && (
+            <div className="absolute bottom-8 bg-white border border-black w-8 text-center">
+              {Array.from({ length: pages }).map((_, i) => (
+                <p
+                  className="hover:bg-gray-200"
+                  onClick={() => {
+                    setCurrentPage(i + 1);
+                    setShowPageList(false);
+                  }}
+                >
+                  {i + 1}
+                </p>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
