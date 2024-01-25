@@ -59,6 +59,7 @@ const DisplayItem = ({ item, bg, setRandomDrink }) => {
       <div className="flex flex-col justify-between w-full h-fit lg:h-full col-span-3 rows-start-3 ">
         <span className="flex flex-col gap-2">
           <p className="font-bold text-2xl">{newItem.strDrink}</p>
+          <p className="font-bold text-2xl">{newItem.idDrink}</p>
           <p className="max-h-[11rem] overflow-y-auto">
             {newItem.strInstructions}
           </p>

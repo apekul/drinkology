@@ -328,7 +328,7 @@ const Search = () => {
         <ul className="flex flex-col gap-5" id="drinkResults">
           <p className="font-bold">
             {filteredResults?.length === 0
-              ? searchResult.length
+              ? searchResult?.length
               : filteredResults?.length}{" "}
             results
           </p>
