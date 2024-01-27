@@ -86,13 +86,13 @@ const Search = () => {
       resultCat = new Set([...resultCat, ...getDrinkInfo]);
     }
     for (let e of arrayOfAlc) {
-      let getDrinkInfo = await fetch(`https://${link}a=${e}`)
+      let getDrinkInfo = await fetch(`${mockServer}a=${e}`)
         .then((res) => res.json())
         .then((res) => res.drinks);
       resultAlc = new Set([...resultAlc, ...getDrinkInfo]);
     }
     for (let e of arrayOfGla) {
-      let getDrinkInfo = await fetch(`https://${link}g=${e}`)
+      let getDrinkInfo = await fetch(`${mockServer}g=${e}`)
         .then((res) => res.json())
         .then((res) => res.drinks);
       resultGla = new Set([...resultGla, ...getDrinkInfo]);

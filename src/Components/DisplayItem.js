@@ -18,7 +18,7 @@ const DisplayItem = ({ item, bg, setRandomDrink }) => {
   };
 
   useEffect(() => {
-    item.strIngredient1 === undefined && fetchByID(item.idDrink);
+    // item.strIngredient1 === undefined && fetchByID(item.idDrink);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
