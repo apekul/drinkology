@@ -4,6 +4,7 @@ import { GiPerspectiveDiceSixFacesTwo } from "react-icons/gi";
 import DisplayItem from "./DisplayItem";
 import { MdOutlineArrowDropDown } from "react-icons/md";
 import ChangePagePanel from "./ChangePagePanel";
+import { TagCats } from "../Object";
 
 // Fix paggination, when too many pages then content is pushed outside of the window
 
@@ -68,12 +69,9 @@ const Search = () => {
     let arrayOfCat = Array.from(category);
     let arrayOfAlc = Array.from(alcohol);
     let arrayOfGla = Array.from(glass);
-    // Api endpoint
-    const link = "www.thecocktaildb.com/api/json/v1/1/filter.php?";
-
     // Mock api endpoint
-    let mockServer =
-      "https://4167e7bb-fa60-4b38-927e-2cf225a76684.mock.pstmn.io/api/json/v1/1/filter.php?";
+    let mockServer = "https://www.thecocktaildb.com/api/json/v1/1/filter.php?";
+    // "https://4167e7bb-fa60-4b38-927e-2cf225a76684.mock.pstmn.io/api/json/v1/1/filter.php?";
 
     let resultCat = new Set();
     let resultAlc = new Set();
@@ -82,7 +80,8 @@ const Search = () => {
     for (let e of arrayOfCat) {
       let getDrinkInfo = await fetch(`${mockServer}c=${e}`)
         .then((res) => res.json())
-        .then((res) => res.drinks);
+        .then((res) => res.drinks)
+        .catch((err) => console.log(err));
       resultCat = new Set([...resultCat, ...getDrinkInfo]);
     }
     for (let e of arrayOfAlc) {
@@ -120,7 +119,7 @@ const Search = () => {
       .then((res) => res.json())
       .then((res) => {
         setSearchResult(res.drinks);
-        setFilteredResults(res.drinks);
+        // setFilteredResults(res.drinks);
       });
   };
   // Filters drinks to match selected tags
@@ -128,14 +127,14 @@ const Search = () => {
     let arrayOfCat = Array.from(category);
     let arrayOfAlc = Array.from(alcohol);
     let arrayOfGla = Array.from(glass);
-    // if (!searchResult || searchResult === null) return;
     let newResult = searchResult.filter(
       (drink) =>
         arrayOfCat.includes(drink.strCategory) ||
         arrayOfAlc.includes(drink.strAlcoholic) ||
         arrayOfGla.includes(drink.strGlass)
     );
-    setFilteredResults(newResult);
+    // console.log(newResult);
+    setFilteredResults(() => newResult);
   };
 
   useEffect(() => {
@@ -158,7 +157,7 @@ const Search = () => {
       return setFilteredResults(searchResult);
     }
     setFilteredResults(searchResult);
-    // filterResult();
+    if (quote.length > 0) filterResult();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchResult]);
 
@@ -178,6 +177,7 @@ const Search = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, glass, alcohol]);
 
+  // set number of pages
   useEffect(() => {
     filteredResults && filteredResults !== null
       ? setPages(Math.ceil(filteredResults.length / pageNumberLimit))
@@ -187,12 +187,12 @@ const Search = () => {
   useEffect(() => {
     // Fetch drink category tags to display in filter search section
     // From Mock server
-    let mock =
-      "https://4167e7bb-fa60-4b38-927e-2cf225a76684.mock.pstmn.io/api/json/v1/1/list.php?";
+    let mock = "https://www.thecocktaildb.com/api/json/v1/1/list.php?";
+
+    // "https://4167e7bb-fa60-4b38-927e-2cf225a76684.mock.pstmn.io/api/json/v1/1/list.php?";
     const catReq = fetch(`${mock}c=list`).then((response) => response.json());
     const glassReq = fetch(`${mock}g=list`).then((response) => response.json());
     const alcoReq = fetch(`${mock}a=list`).then((response) => response.json());
-
     Promise.all([catReq, glassReq, alcoReq])
       .then(([category, glass, alcohol]) => {
         setSearchTags({
@@ -203,6 +203,11 @@ const Search = () => {
       })
       .catch((error) => {
         console.error(error);
+        setSearchTags({
+          category: TagCats.category.drinks,
+          glass: TagCats.glass.drinks,
+          alcohol: TagCats.alcohol.drinks,
+        });
       });
   }, []);
 
@@ -328,20 +333,15 @@ const Search = () => {
         </div>
         {/* Result */}
         <ul className="flex flex-col gap-5" id="drinkResults">
-          <p className="font-bold">
-            {filteredResults?.length === 0
-              ? searchResult?.length
-              : filteredResults?.length}{" "}
-            results
-          </p>
-          {filteredResults?.map((item, index) => {
+          <p className="font-bold">{filteredResults.length} results</p>
+          {filteredResults.map((item, index) => {
             return (
               index + 1 > pageLimit.min &&
               index + 1 <= pageLimit.max && (
                 <DisplayItem
                   item={item}
                   bg={index % 2 === 0 ? "bg-gray-100" : "bg-gray-200"}
-                  key={index}
+                  key={item.idDrink}
                 />
               )
             );
