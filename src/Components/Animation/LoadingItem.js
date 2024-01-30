@@ -2,9 +2,9 @@ import React from "react";
 
 const LoadingItem = () => {
   return (
-    <div class="border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto">
+    <div class=" shadow rounded-md p-4 w-full mx-auto">
       <div class="animate-pulse flex space-x-4">
-        <div class="rounded-full bg-slate-700 h-10 w-10"></div>
+        <div class="w-full sm:w-[20rem] h-[16rem] rounded-md col-span-3 sm:col-span-1 bg-slate-700 "></div>
         <div class="flex-1 space-y-6 py-1">
           <div class="h-2 bg-slate-700 rounded"></div>
           <div class="space-y-3">
