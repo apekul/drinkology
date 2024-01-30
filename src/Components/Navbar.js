@@ -1,12 +1,11 @@
 import React from "react";
-import { BiSolidDrink } from "react-icons/bi";
-
+import logo from "../Assets/IMG/Logo.png";
 const Navbar = () => {
   return (
     <section id="navbar" className="Container">
       <div className="py-3 text-white font-bold">
-        <span className="flex items-center gap-2">
-          <BiSolidDrink />
+        <span className="flex items-center">
+          <img src={logo} alt="" className="w-8" />
           <p>DRINKOLOGY</p>
         </span>
       </div>
