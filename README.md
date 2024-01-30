@@ -18,5 +18,5 @@ Drink/Cocktail database website with one page user friendly design. Search for d
 
 #### Screenshots
 
-![drinkology](https://github.com/apekul/drinkology/assets/22819317/eb561033-a2c1-4447-93ca-6d62f6c15139)
+![drinkology](https://github.com/apekul/drinkology/assets/22819317/3985899d-9a23-4ec5-8b8d-be1dec444248)
 
