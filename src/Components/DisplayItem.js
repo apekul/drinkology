@@ -36,7 +36,7 @@ const DisplayItem = ({ item, bg, setRandomDrink }) => {
       {setRandomDrink && (
         <IoClose
           onClick={() => setRandomDrink(null)}
-          className="absolute right-1 text-2xl top-1 cursor-pointer text-gray-400 hover:text-black"
+          className="absolute bg-white rounded-full text-center right-1 text-2xl top-1 cursor-pointer text-gray-400 hover:text-black"
         />
       )}
       {/* Ingredients */}
