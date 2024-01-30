@@ -2,13 +2,22 @@ import React, { useState, useEffect } from "react";
 import { IoSearch } from "react-icons/io5";
 import { GiPerspectiveDiceSixFacesTwo } from "react-icons/gi";
 import DisplayItem from "./DisplayItem";
-import { MdOutlineArrowDropDown } from "react-icons/md";
+import Categories from "./Categories";
+import RandomDrink from "./RandomDrink";
 import ChangePagePanel from "./ChangePagePanel";
-import { TagCats } from "../Object";
+// import { TagCats } from "../Object";
+import { debounce } from "lodash";
 
-// Fix paggination, when too many pages then content is pushed outside of the window
+const fetchCatData = debounce((url, options, callback) => {
+  fetch(url, options)
+    .then((response) => response.json())
+    .then((data) => callback(data))
+    .catch((error) => console.log(error));
+}, 300);
 
 const Search = () => {
+  const debouncedFetchData = debounce(fetchCatData, 300);
+
   const [searchTags, setSearchTags] = useState({});
   const [diceRotate, setDiceRotate] = useState(false);
 
@@ -20,7 +29,6 @@ const Search = () => {
   // Result for display
   const [searchResult, setSearchResult] = useState([]);
   const [filteredResults, setFilteredResults] = useState([]);
-  // const [resultIDs, setResultIDs] = useState([]);
   const [randomDrink, setRandomDrink] = useState(null);
   const [quote, setQuote] = useState("");
 
@@ -28,11 +36,6 @@ const Search = () => {
   const [category, setCategory] = useState(new Set());
   const [alcohol, setAlcohol] = useState(new Set());
   const [glass, setGlass] = useState(new Set());
-  const [showTags, setShowTags] = useState({
-    category: true,
-    alcohol: false,
-    glass: false,
-  });
 
   const updateTag = (cat, value) => {
     if (cat === "category") {
@@ -62,6 +65,17 @@ const Search = () => {
           })
         : setGlass((prev) => new Set(prev).add(value.strGlass));
     }
+  };
+
+  // Fetch random Drink
+  const fetchRandomDrink = () => {
+    const randomCoctail = "www.thecocktaildb.com/api/json/v1/1/random.php";
+    fetch(`https://${randomCoctail}`)
+      .then((res) => res.json())
+      .then((res) => setRandomDrink(res.drinks[0]));
+    document
+      .getElementById("randomDrink")
+      .scrollIntoView({ behavior: "smooth" });
   };
 
   // Fetch data by categories
@@ -99,17 +113,6 @@ const Search = () => {
     return setSearchResult(
       Array.from(new Set([...resultCat, ...resultAlc, ...resultGla]))
     );
-  };
-
-  // Fetch random drink
-  const fetchRandomDrink = () => {
-    const randomCoctail = "www.thecocktaildb.com/api/json/v1/1/random.php";
-    fetch(`https://${randomCoctail}`)
-      .then((res) => res.json())
-      .then((res) => setRandomDrink(res.drinks[0]));
-    document
-      .getElementById("randomDrink")
-      .scrollIntoView({ behavior: "smooth" });
   };
 
   // Fetch data by name
@@ -186,7 +189,6 @@ const Search = () => {
 
   useEffect(() => {
     // Fetch drink category tags to display in filter search section
-    // From Mock server
     let mock = "https://www.thecocktaildb.com/api/json/v1/1/list.php?";
 
     // "https://4167e7bb-fa60-4b38-927e-2cf225a76684.mock.pstmn.io/api/json/v1/1/list.php?";
@@ -203,11 +205,6 @@ const Search = () => {
       })
       .catch((error) => {
         console.error(error);
-        setSearchTags({
-          category: TagCats.category.drinks,
-          glass: TagCats.glass.drinks,
-          alcohol: TagCats.alcohol.drinks,
-        });
       });
   }, []);
 
@@ -251,86 +248,26 @@ const Search = () => {
           className={`flex gap-3 flex-col flex-wrap border-b-2 pb-5 transition-all`}
         >
           {Object.keys(searchTags).map((cat, index) => (
-            <li key={index} className="flex flex-col gap-2">
-              <span className="flex items-center justify-between px-1 gap-2">
-                <span className="flex items-center">
-                  <p>Filter by: {cat}</p>
-                  <MdOutlineArrowDropDown
-                    size={30}
-                    className={`transition-all duration-[400ms] cursor-pointer ${
-                      showTags[cat] && "rotate-180"
-                    }`}
-                    onClick={() =>
-                      setShowTags((prev) => ({ ...prev, [cat]: !prev[cat] }))
-                    }
-                  />
-                  <p className="bg-gray-300 font-bold px-1">
-                    {cat === "category" && category.size > 0 && category.size}
-                    {cat === "alcohol" && alcohol.size > 0 && alcohol.size}
-                    {cat === "glass" && glass.size > 0 && glass.size}
-                  </p>
-                </span>
-
-                {/* clear category button */}
-                {cat === "category" && category.size > 0 && (
-                  <p
-                    className="cursor-pointer bg-gray-200 text-red-300 px-1 rounded-md text-center font-bold hover:text-red-500"
-                    onClick={() => setCategory(new Set())}
-                  >
-                    Clear
-                  </p>
-                )}
-                {cat === "alcohol" && alcohol.size > 0 && (
-                  <p
-                    className="cursor-pointer bg-gray-200 text-red-300 px-1 rounded-md text-center font-bold hover:text-red-500"
-                    onClick={() => setAlcohol(new Set())}
-                  >
-                    Clear
-                  </p>
-                )}
-                {cat === "glass" && glass.size > 0 && (
-                  <p
-                    className="cursor-pointer bg-gray-200 text-red-300 px-1 rounded-md text-center font-bold hover:text-red-500"
-                    onClick={() => setGlass(new Set())}
-                  >
-                    Clear
-                  </p>
-                )}
-              </span>
-              <ul
-                className={`flex gap-2 flex-wrap ${
-                  showTags[cat] ? "block" : "hidden"
-                }`}
-              >
-                {searchTags[cat].map((v, i) => (
-                  <li
-                    key={i}
-                    className={`border-2 py-1 px-3 rounded-full cursor-pointer text-zinc-500 hover:brightness-90
-                    ${category.has(v.strCategory) && "bg-gray-200"}
-                    ${alcohol.has(v.strAlcoholic) && "bg-gray-200"}
-                    ${glass.has(v.strGlass) && "bg-gray-200"}`}
-                    onClick={() => updateTag(cat, v)}
-                  >
-                    {Object.values(v).map((item, i) => item)}
-                  </li>
-                ))}
-              </ul>
-            </li>
+            <Categories
+              key={index}
+              cat={cat}
+              category={category}
+              alcohol={alcohol}
+              glass={glass}
+              searchTags={searchTags}
+              setCategory={setCategory}
+              setAlcohol={setAlcohol}
+              setGlass={setGlass}
+              updateTag={updateTag}
+            />
           ))}
         </ul>
         {/* random drink */}
-        <div id="randomDrink">
-          {randomDrink && (
-            <div className={`flex flex-col gap-5 border-b-2 pb-5`}>
-              <p className="font-bold">Random Drink</p>
-              <DisplayItem
-                item={randomDrink}
-                bg="bg-indigo-100"
-                setRandomDrink={setRandomDrink}
-              />
-            </div>
-          )}
-        </div>
+        <RandomDrink
+          randomDrink={randomDrink}
+          setRandomDrink={setRandomDrink}
+        />
+
         {/* Result */}
         <ul className="flex flex-col gap-5" id="drinkResults">
           <p className="font-bold">{filteredResults.length} results</p>
