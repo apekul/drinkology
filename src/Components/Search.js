@@ -8,16 +8,7 @@ import ChangePagePanel from "./ChangePagePanel";
 // import { TagCats } from "../Object";
 import { debounce } from "lodash";
 
-const fetchCatData = debounce((url, options, callback) => {
-  fetch(url, options)
-    .then((response) => response.json())
-    .then((data) => callback(data))
-    .catch((error) => console.log(error));
-}, 300);
-
 const Search = () => {
-  const debouncedFetchData = debounce(fetchCatData, 300);
-
   const [searchTags, setSearchTags] = useState({});
   const [diceRotate, setDiceRotate] = useState(false);
 
@@ -36,36 +27,6 @@ const Search = () => {
   const [category, setCategory] = useState(new Set());
   const [alcohol, setAlcohol] = useState(new Set());
   const [glass, setGlass] = useState(new Set());
-
-  const updateTag = (cat, value) => {
-    if (cat === "category") {
-      return category.has(value.strCategory)
-        ? setCategory((prev) => {
-            let newSet = new Set(prev);
-            newSet.delete(value.strCategory);
-            return newSet;
-          })
-        : setCategory((prev) => new Set(prev).add(value.strCategory));
-    }
-    if (cat === "alcohol") {
-      return alcohol.has(value.strAlcoholic)
-        ? setAlcohol((prev) => {
-            let newSet = new Set(prev);
-            newSet.delete(value.strAlcoholic);
-            return newSet;
-          })
-        : setAlcohol((prev) => new Set(prev).add(value.strAlcoholic));
-    }
-    if (cat === "glass") {
-      return glass.has(value.strGlass)
-        ? setGlass((prev) => {
-            let newSet = new Set(prev);
-            newSet.delete(value.strGlass);
-            return newSet;
-          })
-        : setGlass((prev) => new Set(prev).add(value.strGlass));
-    }
-  };
 
   // Fetch random Drink
   const fetchRandomDrink = () => {
@@ -114,6 +75,8 @@ const Search = () => {
       Array.from(new Set([...resultCat, ...resultAlc, ...resultGla]))
     );
   };
+  // Debounce version of fetchByCat
+  const debouncedFetchByCat = debounce(fetchByCat, 1000);
 
   // Fetch data by name
   const fetchData = async () => {
@@ -146,7 +109,7 @@ const Search = () => {
     let arrayOfGla = Array.from(glass);
     let group = [...arrayOfCat, ...arrayOfAlc, ...arrayOfGla];
     quote.length > 0 && fetchData();
-    quote.length <= 0 && group.length > 0 && fetchByCat();
+    quote.length <= 0 && group.length > 0 && debouncedFetchByCat();
     quote.length <= 0 && group.length <= 0 && setSearchResult([]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quote]);
@@ -170,7 +133,8 @@ const Search = () => {
     let arrayOfGla = Array.from(glass);
     let length = [...arrayOfCat, ...arrayOfAlc, ...arrayOfGla].length;
     if (quote.length <= 0) {
-      fetchByCat();
+      // fetchByCat();
+      debouncedFetchByCat();
     }
     if (length <= 0) {
       setFilteredResults(searchResult);
@@ -258,7 +222,6 @@ const Search = () => {
               setCategory={setCategory}
               setAlcohol={setAlcohol}
               setGlass={setGlass}
-              updateTag={updateTag}
             />
           ))}
         </ul>

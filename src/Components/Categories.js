@@ -10,13 +10,41 @@ const Categories = ({
   setCategory,
   setAlcohol,
   setGlass,
-  updateTag,
 }) => {
   const [showTags, setShowTags] = useState({
     category: true,
     alcohol: false,
     glass: false,
   });
+  const updateTag = (cat, value) => {
+    if (cat === "category") {
+      return category.has(value.strCategory)
+        ? setCategory((prev) => {
+            let newSet = new Set(prev);
+            newSet.delete(value.strCategory);
+            return newSet;
+          })
+        : setCategory((prev) => new Set(prev).add(value.strCategory));
+    }
+    if (cat === "alcohol") {
+      return alcohol.has(value.strAlcoholic)
+        ? setAlcohol((prev) => {
+            let newSet = new Set(prev);
+            newSet.delete(value.strAlcoholic);
+            return newSet;
+          })
+        : setAlcohol((prev) => new Set(prev).add(value.strAlcoholic));
+    }
+    if (cat === "glass") {
+      return glass.has(value.strGlass)
+        ? setGlass((prev) => {
+            let newSet = new Set(prev);
+            newSet.delete(value.strGlass);
+            return newSet;
+          })
+        : setGlass((prev) => new Set(prev).add(value.strGlass));
+    }
+  };
   return (
     <li className="flex flex-col gap-2">
       <span className="flex items-center justify-between px-1 gap-2">
